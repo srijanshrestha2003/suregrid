@@ -79,7 +79,7 @@ export function Navbar() {
                         className="group flex items-start gap-4 p-4 hover:bg-gray-50 rounded-xl transition-all"
                       >
                         <div className="w-11 h-11 bg-emerald-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform p-1.5">
-                          <Image src="/surecomply.png" alt="SureComply" width={24} height={24} className="object-contain" />
+                          <Image src="/SureComply.png" alt="SureComply" width={24} height={24} className="object-contain" />
                         </div>
                         <div>
                           <h3 className="font-semibold text-gray-900 group-hover:text-emerald-600 transition-colors mb-1">
@@ -96,7 +96,7 @@ export function Navbar() {
                         className="group flex items-start gap-4 p-4 hover:bg-gray-50 rounded-xl transition-all"
                       >
                         <div className="w-11 h-11 bg-indigo-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform p-1.5">
-                          <Image src="/surepilot.png" alt="SurePilot" width={24} height={24} className="object-contain" />
+                          <Image src="/SurePilot.png" alt="SurePilot" width={24} height={24} className="object-contain" />
                         </div>
                         <div>
                           <h3 className="font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors mb-1">
@@ -113,7 +113,7 @@ export function Navbar() {
                         className="group flex items-start gap-4 p-4 hover:bg-gray-50 rounded-xl transition-all"
                       >
                         <div className="w-11 h-11 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform p-1.5">
-                          <Image src="/surehunt.png" alt="SureHunt" width={24} height={24} className="object-contain" />
+                          <Image src="/SureHunt.png" alt="SureHunt" width={24} height={24} className="object-contain" />
                         </div>
                         <div>
                           <h3 className="font-semibold text-gray-900 group-hover:text-amber-600 transition-colors mb-1">

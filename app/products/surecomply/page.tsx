@@ -25,7 +25,7 @@ export default function SureComplyPage() {
               transition={{ duration: 0.5 }}
               className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-100 border border-emerald-200 rounded-full text-sm font-medium mb-6"
             >
-              <Image src="/surecomply.png" alt="SureComply" width={16} height={16} className="object-contain" />
+              <Image src="/SureComply.png" alt="SureComply" width={16} height={16} className="object-contain" />
               <span className="text-emerald-600">GRC Automation</span>
             </motion.div>
             

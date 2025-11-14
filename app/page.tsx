@@ -168,7 +168,7 @@ export default function HomePage() {
               className="group card-light hover-lift p-8 hover:border-emerald-300 hover:shadow-lg"
             >
               <div className="w-14 h-14 bg-emerald-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform p-2">
-                <Image src="/surecomply.png" alt="SureComply" width={32} height={32} className="object-contain" />
+                <Image src="/SureComply.png" alt="SureComply" width={32} height={32} className="object-contain" />
               </div>
               
               <h3 className="text-2xl font-bold text-gray-900 mb-3">
@@ -212,7 +212,7 @@ export default function HomePage() {
               className="group card-light hover-lift p-8 hover:border-indigo-300 hover:shadow-lg"
             >
               <div className="w-14 h-14 bg-indigo-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform p-2">
-                <Image src="/surepilot.png" alt="SurePilot" width={32} height={32} className="object-contain" />
+                <Image src="/SurePilot.png" alt="SurePilot" width={32} height={32} className="object-contain" />
               </div>
               
               <h3 className="text-2xl font-bold text-gray-900 mb-3">
@@ -256,7 +256,7 @@ export default function HomePage() {
               className="group card-light hover-lift p-8 hover:border-amber-300 hover:shadow-lg"
             >
               <div className="w-14 h-14 bg-amber-100 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform p-2">
-                <Image src="/surehunt.png" alt="SureHunt" width={32} height={32} className="object-contain" />
+                <Image src="/SureHunt.png" alt="SureHunt" width={32} height={32} className="object-contain" />
               </div>
               
               <h3 className="text-2xl font-bold text-gray-900 mb-3">

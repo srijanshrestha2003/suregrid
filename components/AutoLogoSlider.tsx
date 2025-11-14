@@ -150,8 +150,13 @@ function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: 
   useEffect(() => {
     if (!mounted) return
     
+    // Ensure proper URL encoding for paths with spaces/special chars
+    const encodedSrc = logo.src.startsWith('http') 
+      ? logo.src 
+      : logo.src.split('/').map(part => part === '' ? '' : encodeURIComponent(part)).join('/')
+    
     const img = new Image()
-    img.src = logo.src
+    img.src = encodedSrc
     img.onload = () => {
       setImageLoaded(true)
       setImageError(false)
@@ -193,7 +198,9 @@ function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: 
             )}
             {mounted ? (
               <img
-                src={logo.src.startsWith('http') ? logo.src : logo.src}
+                src={logo.src.startsWith('http') 
+                  ? logo.src 
+                  : logo.src.split('/').map(part => part === '' ? '' : encodeURIComponent(part)).join('/')}
                 alt={logo.alt}
                 className="max-w-full max-h-full object-contain transition-opacity duration-200 grayscale hover:grayscale-0 opacity-70 hover:opacity-100"
                 style={{

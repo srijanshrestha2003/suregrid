@@ -25,7 +25,7 @@ export default function SureHuntPage() {
               transition={{ duration: 0.5 }}
               className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-100 border border-indigo-200 rounded-full text-sm font-medium mb-6"
             >
-              <Image src="/surehunt.png" alt="SureHunt" width={16} height={16} className="object-contain" />
+              <Image src="/SureHunt.png" alt="SureHunt" width={16} height={16} className="object-contain" />
               <span className="text-indigo-600">AI Pentesting</span>
             </motion.div>
             
