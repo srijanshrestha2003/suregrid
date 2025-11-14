@@ -193,7 +193,7 @@ function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: 
             )}
             {mounted ? (
               <img
-                src={logo.src}
+                src={logo.src.startsWith('http') ? logo.src : logo.src}
                 alt={logo.alt}
                 className="max-w-full max-h-full object-contain transition-opacity duration-200 grayscale hover:grayscale-0 opacity-70 hover:opacity-100"
                 style={{
@@ -215,6 +215,7 @@ function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: 
                   setImageError(true)
                   setImageLoaded(false)
                 }}
+                crossOrigin="anonymous"
               />
             ) : (
               // Placeholder during SSR to prevent layout shift

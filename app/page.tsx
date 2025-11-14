@@ -330,10 +330,13 @@ export default function HomePage() {
                 className="flex flex-col items-center gap-4 p-6 bg-white rounded-xl border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all group"
               >
                 <div className="w-16 h-16 relative flex items-center justify-center">
-                  <img 
+                  <Image 
                     src={integration.logo} 
                     alt={integration.name}
+                    width={64}
+                    height={64}
                     className="w-full h-full object-contain grayscale group-hover:grayscale-0 opacity-60 group-hover:opacity-100 transition-all group-hover:scale-110"
+                    unoptimized
                   />
                 </div>
                 <span className="text-sm text-gray-700 font-medium">{integration.name}</span>
