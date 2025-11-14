@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 import { 
   Building2, 
   CreditCard, 
@@ -137,23 +136,11 @@ function FloatingIcons({ isDark }: { isDark: boolean }) {
   )
 }
 
-// Helper function to properly encode image paths
-function encodeImagePath(path: string): string {
-  if (path.startsWith('http')) return path
-  // Split path and encode only the filename part, keep slashes
-  const parts = path.split('/')
-  return parts.map((part) => {
-    // Keep leading empty string (for absolute paths starting with /)
-    if (part === '') return ''
-    // Encode the filename part
-    return encodeURIComponent(part)
-  }).join('/')
-}
-
 function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: boolean }) {
   const [imageError, setImageError] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [imageSrc, setImageSrc] = useState(logo.src)
 
   // Mark as mounted after hydration
   useEffect(() => {
@@ -166,16 +153,26 @@ function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: 
     
     // Preload using native HTMLImageElement
     const img = document.createElement('img')
-    img.src = logo.src
+    img.src = imageSrc
     img.onload = () => {
       setImageLoaded(true)
       setImageError(false)
     }
     img.onerror = () => {
-      console.warn(`Failed to preload logo: ${logo.alt} from ${logo.src}`)
+      // Try encoded version if original fails
+      if (imageSrc === logo.src && imageSrc.includes(' ')) {
+        const encoded = logo.src.split('/').map(part => 
+          part === '' ? '' : encodeURIComponent(part)
+        ).join('/')
+        if (encoded !== logo.src) {
+          setImageSrc(encoded)
+          return
+        }
+      }
+      console.warn(`Failed to preload logo: ${logo.alt} from ${imageSrc}`)
       setImageError(true)
     }
-  }, [logo.src, logo.alt, mounted])
+  }, [imageSrc, logo.src, logo.alt, mounted])
 
   return (
     <motion.div
@@ -207,32 +204,46 @@ function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: 
               </motion.div>
             )}
             {mounted ? (
-              <div 
-                className="relative w-[120px] md:w-[150px] h-[60px] md:h-[80px]"
+              <img
+                src={imageSrc}
+                alt={logo.alt}
+                className="max-w-full max-h-full w-auto h-auto object-contain transition-opacity duration-200 grayscale hover:grayscale-0 opacity-70 hover:opacity-100"
                 style={{
-                  opacity: imageLoaded ? 1 : 0,
-                  transition: 'opacity 0.3s ease-in-out'
+                  maxWidth: '120px',
+                  maxHeight: '60px',
+                  width: 'auto',
+                  height: 'auto',
+                  opacity: imageLoaded ? 0.7 : 0,
+                  transition: 'opacity 0.3s ease-in-out',
+                  display: imageLoaded ? 'block' : 'none',
                 }}
-              >
-                <Image
-                  src={logo.src}
-                  alt={logo.alt}
-                  fill
-                  sizes="(max-width: 768px) 120px, 150px"
-                  className="object-contain transition-opacity duration-200 grayscale hover:grayscale-0 opacity-70 hover:opacity-100"
-                  unoptimized
-                  onLoad={() => {
-                    setImageLoaded(true)
-                    setImageError(false)
-                  }}
-                  onError={(e) => {
-                    console.error(`Image failed to load: ${logo.alt} from ${logo.src}`)
-                    setImageError(true)
-                    setImageLoaded(false)
-                  }}
-                  priority={index < 8}
-                />
-              </div>
+                loading={index < 8 ? 'eager' : 'lazy'}
+                onLoad={() => {
+                  setImageLoaded(true)
+                  setImageError(false)
+                }}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement
+                  console.error(`Image failed to load: ${logo.alt}`, {
+                    original: logo.src,
+                    attempted: imageSrc
+                  })
+                  
+                  // Try encoded version if not already encoded
+                  if (imageSrc === logo.src && logo.src.includes(' ')) {
+                    const encoded = logo.src.split('/').map(part => 
+                      part === '' ? '' : encodeURIComponent(part)
+                    ).join('/')
+                    if (encoded !== logo.src) {
+                      setImageSrc(encoded)
+                      return
+                    }
+                  }
+                  
+                  setImageError(true)
+                  setImageLoaded(false)
+                }}
+              />
             ) : (
               // Placeholder during SSR to prevent layout shift
               <div className="w-[120px] h-[60px]" aria-hidden="true" />
