@@ -126,20 +126,20 @@ export default function HomePage() {
           <AutoLogoSlider
             logos={[
               { src: '/HDFCBank-logo.png', alt: 'HDFC Bank' },
-              { src: '/IDFC First Bank.png', alt: 'IDFC First Bank' },
+              { src: '/IDFC-First-Bank.png', alt: 'IDFC First Bank' },
               { src: '/bandhanbank-logo.png', alt: 'Bandhan Bank' },
               { src: '/Paytm-logo.png', alt: 'Paytm' },
-              { src: '/J&K Bank-logo.png', alt: 'J&K Bank' },
+              { src: '/J-K-Bank-logo.png', alt: 'J&K Bank' },
               { src: '/BankofBaroda-logo.png', alt: 'Bank of Baroda' },
-              { src: '/airtelpayments bank-logo.png', alt: 'Airtel Payments Bank' },
-              { src: '/HDFC Life-logo.png', alt: 'HDFC Life' },
+              { src: '/airtelpayments-bank-logo.png', alt: 'Airtel Payments Bank' },
+              { src: '/HDFC-Life-logo.png', alt: 'HDFC Life' },
               { src: '/zomato.png', alt: 'Zomato' },
               { src: '/Uber-logo.png', alt: 'Uber' },
               { src: '/Amazon-logo.png', alt: 'Amazon' },
               { src: '/KPMG-logo.png', alt: 'KPMG' },
               { src: '/slicepay.png', alt: 'Slice' },
               { src: '/CARS24-logo.svg', alt: 'Cars24' },
-              { src: '/Tata Motors-logo.png', alt: 'Tata Motors' },
+              { src: '/Tata-Motors-logo.png', alt: 'Tata Motors' },
               { src: '/Sidbi-logo.png', alt: 'SIDBI' },
             ]}
           />

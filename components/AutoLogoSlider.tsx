@@ -140,7 +140,6 @@ function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: 
   const [imageError, setImageError] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const [imageSrc, setImageSrc] = useState(logo.src)
 
   // Mark as mounted after hydration
   useEffect(() => {
@@ -153,26 +152,16 @@ function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: 
     
     // Preload using native HTMLImageElement
     const img = document.createElement('img')
-    img.src = imageSrc
+    img.src = logo.src
     img.onload = () => {
       setImageLoaded(true)
       setImageError(false)
     }
     img.onerror = () => {
-      // Try encoded version if original fails
-      if (imageSrc === logo.src && imageSrc.includes(' ')) {
-        const encoded = logo.src.split('/').map(part => 
-          part === '' ? '' : encodeURIComponent(part)
-        ).join('/')
-        if (encoded !== logo.src) {
-          setImageSrc(encoded)
-          return
-        }
-      }
-      console.warn(`Failed to preload logo: ${logo.alt} from ${imageSrc}`)
+      console.warn(`Failed to preload logo: ${logo.alt} from ${logo.src}`)
       setImageError(true)
     }
-  }, [imageSrc, logo.src, logo.alt, mounted])
+  }, [logo.src, logo.alt, mounted])
 
   return (
     <motion.div
@@ -205,7 +194,7 @@ function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: 
             )}
             {mounted ? (
               <img
-                src={imageSrc}
+                src={logo.src}
                 alt={logo.alt}
                 className="max-w-full max-h-full w-auto h-auto object-contain transition-opacity duration-200 grayscale hover:grayscale-0 opacity-70 hover:opacity-100"
                 style={{
@@ -222,24 +211,8 @@ function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: 
                   setImageLoaded(true)
                   setImageError(false)
                 }}
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement
-                  console.error(`Image failed to load: ${logo.alt}`, {
-                    original: logo.src,
-                    attempted: imageSrc
-                  })
-                  
-                  // Try encoded version if not already encoded
-                  if (imageSrc === logo.src && logo.src.includes(' ')) {
-                    const encoded = logo.src.split('/').map(part => 
-                      part === '' ? '' : encodeURIComponent(part)
-                    ).join('/')
-                    if (encoded !== logo.src) {
-                      setImageSrc(encoded)
-                      return
-                    }
-                  }
-                  
+                onError={() => {
+                  console.error(`Image failed to load: ${logo.alt} from ${logo.src}`)
                   setImageError(true)
                   setImageLoaded(false)
                 }}
