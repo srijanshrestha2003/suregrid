@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 import { 
   Building2, 
   CreditCard, 
@@ -163,35 +164,16 @@ function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: 
   useEffect(() => {
     if (!mounted) return
     
-    const encodedSrc = encodeImagePath(logo.src)
-    
-    // Try loading the image
-    const img = new Image()
-    img.src = encodedSrc
+    // Preload using native HTMLImageElement
+    const img = document.createElement('img')
+    img.src = logo.src
     img.onload = () => {
       setImageLoaded(true)
       setImageError(false)
     }
     img.onerror = () => {
-      // Try original path if encoded fails
-      if (encodedSrc !== logo.src) {
-        const fallbackImg = new Image()
-        fallbackImg.src = logo.src
-        fallbackImg.onload = () => {
-          setImageLoaded(true)
-          setImageError(false)
-        }
-        fallbackImg.onerror = () => {
-          console.warn(`Failed to load logo: ${logo.alt}`, {
-            original: logo.src,
-            encoded: encodedSrc
-          })
-          setImageError(true)
-        }
-      } else {
-        console.warn(`Failed to load logo: ${logo.alt} from ${logo.src}`)
-        setImageError(true)
-      }
+      console.warn(`Failed to preload logo: ${logo.alt} from ${logo.src}`)
+      setImageError(true)
     }
   }, [logo.src, logo.alt, mounted])
 
@@ -225,41 +207,32 @@ function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: 
               </motion.div>
             )}
             {mounted ? (
-              <img
-                src={encodeImagePath(logo.src)}
-                alt={logo.alt}
-                className="max-w-full max-h-full object-contain transition-opacity duration-200 grayscale hover:grayscale-0 opacity-70 hover:opacity-100"
+              <div 
+                className="relative w-[120px] md:w-[150px] h-[60px] md:h-[80px]"
                 style={{
-                  width: 'auto',
-                  height: 'auto',
-                  maxWidth: '120px',
-                  maxHeight: '60px',
-                  opacity: imageLoaded ? 0.7 : 0,
-                  display: imageLoaded ? 'block' : 'none',
+                  opacity: imageLoaded ? 1 : 0,
+                  transition: 'opacity 0.3s ease-in-out'
                 }}
-                loading={index < 8 ? 'eager' : 'lazy'}
-                fetchPriority={index < 8 ? 'high' : 'auto'}
-                onLoad={() => {
-                  setImageLoaded(true)
-                  setImageError(false)
-                }}
-                onError={(e) => {
-                  const encoded = encodeImagePath(logo.src)
-                  console.error(`Image failed to load in img tag: ${logo.alt}`, {
-                    original: logo.src,
-                    encoded: encoded,
-                    target: (e.target as HTMLImageElement)?.src
-                  })
-                  // Try fallback to original path
-                  if (encoded !== logo.src) {
-                    const img = e.target as HTMLImageElement
-                    img.src = logo.src
-                  } else {
+              >
+                <Image
+                  src={logo.src}
+                  alt={logo.alt}
+                  fill
+                  sizes="(max-width: 768px) 120px, 150px"
+                  className="object-contain transition-opacity duration-200 grayscale hover:grayscale-0 opacity-70 hover:opacity-100"
+                  unoptimized
+                  onLoad={() => {
+                    setImageLoaded(true)
+                    setImageError(false)
+                  }}
+                  onError={(e) => {
+                    console.error(`Image failed to load: ${logo.alt} from ${logo.src}`)
                     setImageError(true)
                     setImageLoaded(false)
-                  }
-                }}
-              />
+                  }}
+                  priority={index < 8}
+                />
+              </div>
             ) : (
               // Placeholder during SSR to prevent layout shift
               <div className="w-[120px] h-[60px]" aria-hidden="true" />
