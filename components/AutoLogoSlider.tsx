@@ -136,6 +136,19 @@ function FloatingIcons({ isDark }: { isDark: boolean }) {
   )
 }
 
+// Helper function to properly encode image paths
+function encodeImagePath(path: string): string {
+  if (path.startsWith('http')) return path
+  // Split path and encode only the filename part, keep slashes
+  const parts = path.split('/')
+  return parts.map((part) => {
+    // Keep leading empty string (for absolute paths starting with /)
+    if (part === '') return ''
+    // Encode the filename part
+    return encodeURIComponent(part)
+  }).join('/')
+}
+
 function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: boolean }) {
   const [imageError, setImageError] = useState(false)
   const [imageLoaded, setImageLoaded] = useState(false)
@@ -150,11 +163,9 @@ function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: 
   useEffect(() => {
     if (!mounted) return
     
-    // Ensure proper URL encoding for paths with spaces/special chars
-    const encodedSrc = logo.src.startsWith('http') 
-      ? logo.src 
-      : logo.src.split('/').map(part => part === '' ? '' : encodeURIComponent(part)).join('/')
+    const encodedSrc = encodeImagePath(logo.src)
     
+    // Try loading the image
     const img = new Image()
     img.src = encodedSrc
     img.onload = () => {
@@ -162,8 +173,25 @@ function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: 
       setImageError(false)
     }
     img.onerror = () => {
-      console.warn(`Failed to preload logo: ${logo.alt} from ${logo.src}`)
-      setImageError(true)
+      // Try original path if encoded fails
+      if (encodedSrc !== logo.src) {
+        const fallbackImg = new Image()
+        fallbackImg.src = logo.src
+        fallbackImg.onload = () => {
+          setImageLoaded(true)
+          setImageError(false)
+        }
+        fallbackImg.onerror = () => {
+          console.warn(`Failed to load logo: ${logo.alt}`, {
+            original: logo.src,
+            encoded: encodedSrc
+          })
+          setImageError(true)
+        }
+      } else {
+        console.warn(`Failed to load logo: ${logo.alt} from ${logo.src}`)
+        setImageError(true)
+      }
     }
   }, [logo.src, logo.alt, mounted])
 
@@ -198,9 +226,7 @@ function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: 
             )}
             {mounted ? (
               <img
-                src={logo.src.startsWith('http') 
-                  ? logo.src 
-                  : logo.src.split('/').map(part => part === '' ? '' : encodeURIComponent(part)).join('/')}
+                src={encodeImagePath(logo.src)}
                 alt={logo.alt}
                 className="max-w-full max-h-full object-contain transition-opacity duration-200 grayscale hover:grayscale-0 opacity-70 hover:opacity-100"
                 style={{
@@ -218,11 +244,21 @@ function LogoCard({ logo, index, isDark }: { logo: Logo; index: number; isDark: 
                   setImageError(false)
                 }}
                 onError={(e) => {
-                  console.error(`Image failed to load: ${logo.alt}`, logo.src)
-                  setImageError(true)
-                  setImageLoaded(false)
+                  const encoded = encodeImagePath(logo.src)
+                  console.error(`Image failed to load in img tag: ${logo.alt}`, {
+                    original: logo.src,
+                    encoded: encoded,
+                    target: (e.target as HTMLImageElement)?.src
+                  })
+                  // Try fallback to original path
+                  if (encoded !== logo.src) {
+                    const img = e.target as HTMLImageElement
+                    img.src = logo.src
+                  } else {
+                    setImageError(true)
+                    setImageLoaded(false)
+                  }
                 }}
-                crossOrigin="anonymous"
               />
             ) : (
               // Placeholder during SSR to prevent layout shift
