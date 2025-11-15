@@ -48,7 +48,7 @@ export default function SurePilotPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="text-5xl lg:text-6xl font-bold tracking-tight mb-6"
+              className="text-5xl lg:text-6xl font-bold tracking-tight leading-snug lg:leading-snug mb-8 lg:mb-10 px-4"
             >
               <span className="text-gray-900">
                 Complete compliance questionnaires in{' '}
@@ -63,7 +63,7 @@ export default function SurePilotPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="text-xl text-gray-600 mb-12 leading-relaxed"
+              className="text-xl text-gray-600 mb-12 leading-relaxed px-4 lg:px-6"
             >
               Surepilot automates vendor security assessments and compliance questionnaires with AI 
               that understands your verification infrastructure. Built for fast-moving teams who can&apos;t afford 
